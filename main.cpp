@@ -7,11 +7,17 @@
 
 int main()
 {
-   MerkelMain app{"Data.csv"};
-    app.init();
+//    MerkelMain app{"Data.csv"};
+//     app.init();
 // CSVReader::readCSV("Data.csv");
-
+Wallet wallet;
+wallet.insertCurrency("BTC", 10);
+wallet.insertCurrency("USDT", 1000);
+std::cout<<wallet.toString() << std::endl;
+wallet.removeCurrency("USDT",1000);
+std::cout<<wallet.toString() << std::endl;
 }
+
 
 
 

@@ -10,7 +10,7 @@ void MerkelMain::init()
     int input;
     currentTime = orderBook.getEarliestTime();
 
-    wallet.insertCurrency("BTC",10);
+    wallet.insertCurrency("BTC", 10);
     while (true) {
         printMenu();
         input = getUserOption();
@@ -74,29 +74,25 @@ void MerkelMain::enterOffer()
 
     try {
         OrderBookEntry obe = CSVReader::stringsToOBE(
+            tokens[0], // product
             tokens[1], // price
             tokens[2], // amount
             currentTime,
-            tokens[0], // product
             OrderBookType::ask
         );
 
         orderBook.insertOrder(obe);
-         // Insert the order into the order book
 
         // Optional: print confirmation
         std::cout << "Offer created for " << obe.product
                   << " price: " << obe.price
                   << " amount: " << obe.amount << std::endl;
 
-        // Note: You can insert this into your order book here if you implement an addOrder method
-
     } catch (const std::exception& e) {
         std::cout << "Error creating offer MerkelMain::enterOffer: " << e.what() << std::endl;
         return; // Exit if there's an error
     }
 }
-
 
 void MerkelMain::enterBid()
 {
@@ -113,15 +109,14 @@ void MerkelMain::enterBid()
 
     try {
         OrderBookEntry obe = CSVReader::stringsToOBE(
+            tokens[0], // product
             tokens[1], // price
             tokens[2], // amount
             currentTime,
-            tokens[0], // product
             OrderBookType::bid  // This is the key difference - bid instead of ask
         );
 
         orderBook.insertOrder(obe);
-        // Insert the order into the order book
 
         // Optional: print confirmation
         std::cout << "Bid created for " << obe.product
@@ -134,12 +129,17 @@ void MerkelMain::enterBid()
     }
 }
 
+void MerkelMain::printWallet()
+{
+    std::cout << wallet.toString() << std::endl;
+}
+
 void MerkelMain::gotoNextTimeframe()
 {
     std::cout << "Going to next timeframe" << std::endl;
     std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime); // Match orders at the current time
     std::cout << "Sales at time " << currentTime << ": " << sales.size() << std::endl;
-    for (OrderBookEntry& sale :sales)
+    for (OrderBookEntry& sale : sales)
     {
         std::cout << "Sale: " << sale.product << " at price: " << sale.price
                   << " amount: " << sale.amount << " at time: " << sale.timestamp << std::endl;
