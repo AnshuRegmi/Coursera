@@ -114,3 +114,57 @@ void OrderBook::insertOrder(OrderBookEntry& order)
 //         }
 //     }
 // }
+
+
+std::vector<OrderBookEntry>OrderBook::matchAsksToBids(std::string product, std::string timestamp)
+{
+    std::vector<OrderBookEntry>asks=getOrders(OrderBookType::ask,
+                                                             product,
+                                                              timestamp);
+    std::vector<OrderBookEntry>bids=getOrders(OrderBookType::bid,
+                                                                product,
+                                                                timestamp);
+     std::vector<OrderBookEntry>sales;
+
+     std::sort(asks.begin(), asks.end(), OrderBookEntry::compareByPriceAsc);
+
+     std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+
+     for(OrderBookEntry& ask: asks)
+     {
+        for (OrderBookEntry& bid : bids)
+        {
+            if(bid.price >= ask.price)
+            {
+                OrderBookEntry sale{ask.price,0, timestamp, product ,OrderBookType::sale};
+                
+                if (bid.amount == ask.amount)
+                {
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    bid.amount = 0; // Bid fully matched
+                    break;
+                }
+                if (bid.amount> ask.amount)
+                {
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    bid.amount -= ask.amount; // Bid partially matched
+                    break;
+                }
+                {
+
+                }
+                if (bid.amount<ask.amount)
+                {
+                    sale.amount = bid.amount;
+                    sales.push_back(sale);
+                    ask.amount -= bid.amount; // Ask partially matched
+                    bid.amount = 0; // Bid fully matched
+                    continue;
+                }
+            }
+        }
+     }
+     return sales; 
+}

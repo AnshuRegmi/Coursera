@@ -12,7 +12,6 @@ private:
     void printMenu();
     void printHelp();
     void printMarketStats();
-    void enterAsk();
     void enterBid();
     void enterOffer();
     void printWallet();

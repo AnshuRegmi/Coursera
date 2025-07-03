@@ -136,6 +136,13 @@ void MerkelMain::enterBid()
 void MerkelMain::gotoNextTimeframe()
 {
     std::cout << "Going to next timeframe" << std::endl;
+    std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime); // Match orders at the current time
+    std::cout << "Sales at time " << currentTime << ": " << sales.size() << std::endl;
+    for (OrderBookEntry& sale :sales)
+    {
+        std::cout << "Sale: " << sale.product << " at price: " << sale.price
+                  << " amount: " << sale.amount << " at time: " << sale.timestamp << std::endl;
+    }
     currentTime = orderBook.getNextTime(currentTime);
 }
 
