@@ -2,6 +2,7 @@
 #include "OrderBookEntry.h"
 #include "OrderBook.h"
 #include <vector>
+#include "Wallet.h"
 
 class MerkelMain {
 public:
@@ -22,4 +23,6 @@ private:
 
     std::string currentTime;
     OrderBook orderBook;
+
+    Wallet wallet; // User's wallet to hold currencies
 };
